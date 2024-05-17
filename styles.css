@@ -1,0 +1,69 @@
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(12, 6, 6); /* Set background color to black */
+    color: white; /* Add missing semicolon */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Align items in a column */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    height: 100vh; /* Make the body take the full height of the viewport */
+}
+
+/* Title styles */
+h1 {
+    color: white; /* Set color to white */
+    text-align: center; /* Center align the title */
+    margin-bottom: 20px; /* Add some margin below the title */
+}
+
+/* Game grid styles */
+#game-of-life {
+    display: grid;
+    grid-template-columns: repeat(30, 20px);
+    grid-template-rows: repeat(30, 20px);
+    gap: 1px;
+    cursor: pointer;
+}
+
+/* Individual cell styles */
+.cell {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+/* Alive cell styles */
+.alive {
+    background-color: black;
+}
+
+/* Start/Stop button styles */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Button hover styles */
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Button active styles */
+button:active {
+    background-color: #0056b3;
+    transform: translateY(1px);
+}
+
+/* Container styles for the Start/Stop button */
+.container {
+    text-align: center; /* Center align the content inside the container */
+}

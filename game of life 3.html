@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game of Life</title>   
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Link to the CSS stylesheet -->
+    <link rel="stylesheet" href="/Users/jxants/Desktop/styles.css">
+</head>
+<body>
+    <div class="container d-flex flex-column align-items-center justify-content-center" style="height: 100vh;">
+        <h1 class="mt-5 mb-3">Game of Life</h1>
+        <div id="game-of-life" class="row"></div>
+        <button id="startStopButton" class="btn btn-primary mt-3">Start</button>
+    </div>
+
+    <!-- Include Bootstrap JS (Optional) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Your JavaScript code
+        const rows = 30;
+        const cols = 30;
+        let cells = [];
+        let generation = 0;
+        let isMouseDown = false;
+        let isPlaying = false;
+        let intervalId;
+
+        const gameOfLife = document.getElementById('game-of-life');
+        const startStopButton = document.getElementById('startStopButton');
+
+        // Function to create initial cells grid
+        const createCellsGrid = () => {
+            for (let i = 0; i < rows; i++) {
+                cells.push([]);
+                for (let j = 0; j < cols; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    cell.addEventListener('mousedown', handleMouseDown);
+                    cell.addEventListener('mouseenter', handleMouseEnter);
+                    cell.addEventListener('mouseup', handleMouseUp);
+                    gameOfLife.appendChild(cell);
+                    cells[i].push(cell);
+                }
+            }
+        };
+        createCellsGrid();
+
+        // Function to handle mouse down event
+        function handleMouseDown() {
+            isMouseDown = true;
+            toggleCellState(this);
+        }
+
+        // Function to handle mouse enter event
+        function handleMouseEnter() {
+            if (isMouseDown) {
+                toggleCellState(this);
+            }
+        }
+
+        // Function to handle mouse up event
+        function handleMouseUp() {
+            isMouseDown = false;
+        }
+
+        // Function to toggle cell state
+        function toggleCellState(cell) {
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+            cell.classList.toggle('alive');
+        }
+
+        // Function to start/stop the game
+        function startStopGame() {
+            if (isPlaying) {
+                clearInterval(intervalId);
+                isPlaying = false;
+                startStopButton.textContent = 'Start';
+            } else {
+                intervalId = setInterval(evolve, 200);
+                isPlaying = true;
+                startStopButton.textContent = 'Stop';
+            }
+        }
+
+        // Function to evolve to the next generation
+        function evolve() {
+            const nextGeneration = [];
+            for (let i = 0; i < rows; i++) {
+                nextGeneration.push([]);
+                for (let j = 0; j < cols; j++) {
+                    const aliveNeighbors = countAliveNeighbors(i, j);
+                    if (cells[i][j].classList.contains('alive')) {
+                        if (aliveNeighbors === 2 || aliveNeighbors === 3) {
+                            nextGeneration[i][j] = 1;
+                        } else {
+                            nextGeneration[i][j] = 0;
+                        }
+                    } else {
+                        if (aliveNeighbors === 3) {
+                            nextGeneration[i][j] = 1;
+                        } else {
+                            nextGeneration[i][j] = 0;
+                        }
+                    }
+                }
+            }
+
+            // Update cells according to next generation
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (nextGeneration[i][j] === 1) {
+                        cells[i][j].classList.add('alive');
+                    } else {
+                        cells[i][j].classList.remove('alive');
+                    }
+                }
+            }
+            generation++;
+        }
+
+        // Function to count alive neighbors of a cell
+        function countAliveNeighbors(row, col) {
+            let count = 0;
+            for (let i = row - 1; i <= row + 1; i++) {
+                for (let j = col - 1; j <= col + 1; j++) {
+                    if (i >= 0 && i < rows && j >= 0
+                    && j < cols && !(i === row && j === col)) {
+                        if (cells[i][j].classList.contains('alive')) {
+                            count++;
+                        }
+                    }
+                }
+            }
+            return count;
+        }
+
+        startStopButton.addEventListener('click', startStopGame);
+    </script>
+</body>
+</html>
